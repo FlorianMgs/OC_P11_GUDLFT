@@ -4,14 +4,14 @@ from flask import Flask, render_template, request, redirect, flash, url_for
 
 def load_clubs():
     with open('clubs.json') as c:
-         listOfClubs = json.load(c)['clubs']
-         return listOfClubs
+        listOfClubs = json.load(c)['clubs']
+        return listOfClubs
 
 
 def load_competitions():
     with open('competitions.json') as comps:
-         listOfCompetitions = json.load(comps)['competitions']
-         return listOfCompetitions
+        listOfCompetitions = json.load(comps)['competitions']
+        return listOfCompetitions
 
 
 app = Flask(__name__)
@@ -54,7 +54,7 @@ def purchase_places():
 
 
 # TODO: Add route for points display
-
+###
 
 @app.route('/logout')
 def logout():
