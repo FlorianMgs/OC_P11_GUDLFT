@@ -2,7 +2,7 @@ bin
 include
 lib
 .Python
-tests/
+tests/unit_tests/.pytest_cache
 .envrc
 __pycache__
 .idea

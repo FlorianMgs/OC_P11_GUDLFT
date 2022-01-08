@@ -11,6 +11,9 @@
         <label for="email">Email:</label>
         <input type="email" name="email" id=""/>
         <button type="submit">Enter</button>
+        {% if error %}
+            <p class="error" style="color:red;">Please enter a valid email address</p>
+        {% endif %}
     </form>
 </body>
 </html>
