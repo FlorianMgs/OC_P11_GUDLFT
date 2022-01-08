@@ -1,17 +1,5 @@
-import json
+from helpers import read
 from flask import Flask, render_template, request, redirect, flash, url_for
-
-
-def load_clubs():
-    with open('clubs.json') as c:
-        listOfClubs = json.load(c)['clubs']
-        return listOfClubs
-
-
-def load_competitions():
-    with open('competitions.json') as comps:
-        listOfCompetitions = json.load(comps)['competitions']
-        return listOfCompetitions
 
 
 def create_app(config):
@@ -19,8 +7,8 @@ def create_app(config):
     app.secret_key = 'something_special'
     app.config.from_object(config)
 
-    competitions = load_competitions()
-    clubs = load_clubs()
+    competitions = read('competitions.json', 'competitions')
+    clubs = read('clubs.json', 'clubs')
 
     @app.route('/')
     def index():
@@ -28,8 +16,11 @@ def create_app(config):
 
     @app.route('/showSummary', methods=['POST'])
     def show_summary():
-        club = [club for club in clubs if club['email'] == request.form['email']][0]
-        return render_template('welcome.html', club=club, competitions=competitions)
+        try:
+            club = [club for club in clubs if club['email'] == request.form['email']][0]
+            return render_template('welcome.html', club=club, competitions=competitions)
+        except IndexError:
+            return render_template('index.html', error=True)
 
     @app.route('/book/<competition>/<club>')
     def book(competition, club):
@@ -57,7 +48,4 @@ def create_app(config):
         return redirect(url_for('index'))
 
     return app
-
-
-create_app({})
 
