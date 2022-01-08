@@ -10,7 +10,7 @@ class TestShowSummary:
         valid_email = 'john@simplylift.co'
         response = client.post('/showSummary', data={'email': valid_email})
         assert response.status_code == 200
-        assert valid_email in str(response.data)
+        assert valid_email in response.data.decode()
 
     def test_invalid_email_should_return_index_page_with_error(self, client):
         """
@@ -19,7 +19,7 @@ class TestShowSummary:
         invalid_email = 'invalid@simplylift.com'
         response = client.post('/showSummary', data={'email': invalid_email})
         assert response.status_code == 200
-        assert 'class="error"' in str(response.data)
+        assert 'error' in response.data.decode()
 
 
 
