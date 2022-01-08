@@ -17,7 +17,7 @@ class TestShowSummary:
         As we dont have means to assert used templates, we check if the error message is in response
         """
         invalid_email = 'invalid@simplylift.com'
-        response = client.post('/showSummary', data={'email': invalid_email})
+        response = client.post('/showSummary', data={'email': invalid_email}, follow_redirects=True)
         assert response.status_code == 200
         assert 'error' in response.data.decode()
 

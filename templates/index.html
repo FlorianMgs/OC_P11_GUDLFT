@@ -11,9 +11,15 @@
         <label for="email">Email:</label>
         <input type="email" name="email" id=""/>
         <button type="submit">Enter</button>
-        {% if error %}
-            <p class="error" style="color:red;">Please enter a valid email address</p>
-        {% endif %}
     </form>
+    {% with messages = get_flashed_messages()%}
+        {% if messages %}
+            <ul>
+           {% for message in messages %}
+                <li>{{message}}</li>
+            {% endfor %}
+           </ul>
+        {% endif %}
+    {% endwith %}
 </body>
 </html>

@@ -1,3 +1,4 @@
+import json
 from helpers import read
 from flask import Flask, render_template, request, redirect, flash, url_for
 
@@ -20,7 +21,8 @@ def create_app(config):
             club = [club for club in clubs if club['email'] == request.form['email']][0]
             return render_template('welcome.html', club=club, competitions=competitions)
         except IndexError:
-            return render_template('index.html', error=True)
+            flash("error: please enter a valid email")
+            return redirect(url_for('index'))
 
     @app.route('/book/<competition>/<club>')
     def book(competition, club):
@@ -37,9 +39,24 @@ def create_app(config):
         competition = [c for c in competitions if c['name'] == request.form['competition']][0]
         club = [c for c in clubs if c['name'] == request.form['club']][0]
         placesRequired = int(request.form['places'])
-        competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-        flash('Great-booking complete!')
-        return render_template('welcome.html', club=club, competitions=competitions)
+
+        # checking if points are valid
+        if placesRequired < 0 or placesRequired > int(club['points']):
+            flash("error: please enter a valid number")
+            return redirect(url_for('book', club=club['name'], competition=competition['name']))
+        else:
+            # updating number of places available in competition, then deduct points from club balance
+            competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
+            club['points'] = int(club['points']) - placesRequired
+
+            # updating points in json
+            with open('clubs.json') as f:
+                data = json.load(f)
+                data['clubs'][clubs.index(club)]["points"] = str(club['points'])
+                json.dump(data, open('clubs.json', 'w'), indent=4)
+
+            flash('Great-booking complete!')
+            return render_template('welcome.html', club=club, competitions=competitions)
 
     # TODO: Add route for points display
 
