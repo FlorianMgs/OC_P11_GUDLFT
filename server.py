@@ -1,5 +1,5 @@
 import json
-from helpers import read
+from helpers import read, update_points
 from flask import Flask, render_template, request, redirect, flash, url_for
 
 
@@ -44,16 +44,19 @@ def create_app(config):
         if placesRequired < 0 or placesRequired > int(club['points']):
             flash("error: please enter a valid number")
             return redirect(url_for('book', club=club['name'], competition=competition['name']))
+
         else:
             # updating number of places available in competition, then deduct points from club balance
             competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
             club['points'] = int(club['points']) - placesRequired
 
-            # updating points in json
-            with open('clubs.json') as f:
-                data = json.load(f)
-                data['clubs'][clubs.index(club)]["points"] = str(club['points'])
-                json.dump(data, open('clubs.json', 'w'), indent=4)
+            # updating points in clubs.json and competitions.json
+            update_points(
+                points=str(club['points']),
+                places=str(competition['numberOfPlaces']),
+                club_idx=clubs.index(club),
+                comp_idx=competitions.index(competition)
+            )
 
             flash('Great-booking complete!')
             return render_template('welcome.html', club=club, competitions=competitions)
