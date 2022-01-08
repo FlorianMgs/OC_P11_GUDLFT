@@ -27,16 +27,18 @@ class TestPurchasePlace:
         """
         club = "Simply Lift"
         competition = "Spring Festival"
-        places = "-1"
-        response = client.post(
-            '/purchasePlaces',
-            data={
-                'club': club,
-                'competition': competition,
-                'places': places
-            },
-            follow_redirects=True
-        )
-        assert response.status_code == 200
-        assert 'error' in response.data.decode()
+        places = ["0", "-1", "1000"]
+
+        for value in places:
+            response = client.post(
+                '/purchasePlaces',
+                data={
+                    'club': club,
+                    'competition': competition,
+                    'places': value
+                },
+                follow_redirects=True
+            )
+            assert response.status_code == 200
+            assert 'error' in response.data.decode()
 

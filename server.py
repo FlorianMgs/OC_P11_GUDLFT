@@ -41,8 +41,8 @@ def create_app(config):
         placesRequired = int(request.form['places'])
 
         # checking if points are valid
-        if placesRequired < 0 or placesRequired > int(club['points']):
-            flash("error: please enter a valid number")
+        if not 0 < placesRequired < 12 or placesRequired > int(club['points']) or placesRequired > int(competition['numberOfPlaces']):
+            flash("error: please enter a valid amount of points")
             return redirect(url_for('book', club=club['name'], competition=competition['name']))
 
         else:
