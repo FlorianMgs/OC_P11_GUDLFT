@@ -16,7 +16,8 @@ class TestPurchasePlace:
                 'club': club,
                 'competition': competition,
                 'places': places
-            }
+            },
+            follow_redirects=True
         )
         assert response.status_code == 200
         assert 'booking complete' in response.data.decode()
