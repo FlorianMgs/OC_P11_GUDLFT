@@ -1,4 +1,4 @@
-from helpers import read, update_points, update_competition_dict_with_past_bool
+from utils import read, update_points, update_competition_dict_with_past_bool
 from flask import Flask, render_template, request, redirect, flash, url_for
 
 

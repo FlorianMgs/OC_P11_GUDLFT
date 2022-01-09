@@ -1,4 +1,4 @@
-from tests.unit_tests.fixtures import client, test_club
+from tests.unit_tests.server.fixtures import client, test_club
 
 
 def test_points_page_should_display(client):

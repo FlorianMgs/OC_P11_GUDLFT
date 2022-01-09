@@ -1,4 +1,4 @@
-from tests.unit_tests.fixtures import client
+from tests.unit_tests.server.fixtures import client
 
 
 class TestPurchasePlace:

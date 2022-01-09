@@ -1,4 +1,4 @@
-from tests.unit_tests.fixtures import client
+from tests.unit_tests.server.fixtures import client
 
 
 def test_index_route_should_return_index_page(client):

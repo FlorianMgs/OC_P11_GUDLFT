@@ -1,0 +1,11 @@
+[run]
+omit =
+        *.pytest_cache*
+        *tests/*
+        *templates/*
+        *venv/*
+        *.gitignore*
+        *clubs.json*
+        *competitions.json*
+        *README.md*
+        *requirements.txt*
