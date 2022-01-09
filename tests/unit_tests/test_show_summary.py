@@ -1,4 +1,4 @@
-from tests.unit_tests.fixtures import client, test_club
+from tests.unit_tests.fixtures import client, test_club, test_past_comp
 
 
 class TestShowSummary:
@@ -21,5 +21,12 @@ class TestShowSummary:
         assert response.status_code == 200
         assert 'error' in response.data.decode()
 
+    def test_past_competition_should_not_be_bookable(self, test_club, test_past_comp, client):
+        """
+        Check if past competition is unbookable. "Past competition" should be written instead of Booking link
+        """
+        response = client.post('/showSummary', data={'email': test_club['email']})
+        assert response.status_code == 200
+        assert test_past_comp['name'] in response.data.decode() and "Past competition" in response.data.decode()
 
 

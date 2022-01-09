@@ -30,7 +30,7 @@ def test_comp():
 @pytest.fixture
 def test_past_comp():
     return {
-        "name": "Summer Festival 2022",
-        "date": "2020-06-22 13:30:00",
-        "numberOfPlaces": "58"
+        "name": "Fall Classic",
+        "date": "2020-10-22 13:30:00",
+        "numberOfPlaces": "13"
     }
