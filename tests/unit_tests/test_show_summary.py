@@ -1,13 +1,13 @@
-from tests.unit_tests.fixtures import client
+from tests.unit_tests.fixtures import client, test_club
 
 
 class TestShowSummary:
 
-    def test_valid_email_should_return_welcome_page(self, client):
+    def test_valid_email_should_return_welcome_page(self, test_club, client):
         """
         As we dont have means to assert used templates, we check if our posted email is in response
         """
-        valid_email = 'john@simplylift.co'
+        valid_email = test_club["email"]
         response = client.post('/showSummary', data={'email': valid_email})
         assert response.status_code == 200
         assert valid_email in response.data.decode()

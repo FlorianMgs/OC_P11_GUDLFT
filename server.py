@@ -1,5 +1,6 @@
 import json
-from helpers import read, update_points
+from datetime import datetime
+from helpers import read, update_points, update_competition_dict_with_past_bool
 from flask import Flask, render_template, request, redirect, flash, url_for
 
 
@@ -19,7 +20,8 @@ def create_app(config):
     def show_summary():
         try:
             club = [club for club in clubs if club['email'] == request.form['email']][0]
-            return render_template('welcome.html', club=club, competitions=competitions)
+            _competitions = update_competition_dict_with_past_bool(competitions)
+            return render_template('welcome.html', club=club, competitions=_competitions)
         except IndexError:
             flash("error: please enter a valid email")
             return redirect(url_for('index'))
@@ -41,7 +43,7 @@ def create_app(config):
         placesRequired = int(request.form['places'])
 
         # checking if points are valid
-        if not 0 < placesRequired < 12 or placesRequired > int(club['points']) or placesRequired > int(competition['numberOfPlaces']):
+        if not 0 < placesRequired <= 12 or placesRequired > int(club['points']) or placesRequired > int(competition['numberOfPlaces']):
             flash("error: please enter a valid amount of points")
             return redirect(url_for('book', club=club['name'], competition=competition['name']))
 
