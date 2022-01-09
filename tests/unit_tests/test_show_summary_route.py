@@ -19,7 +19,8 @@ class TestShowSummary:
         invalid_email = 'invalid@simplylift.com'
         response = client.post('/showSummary', data={'email': invalid_email}, follow_redirects=True)
         assert response.status_code == 200
-        assert 'error' in response.data.decode() and "GUDLFT Registration" in response.data.decode()
+        assert "GUDLFT Registration" in response.data.decode()
+        assert 'error' in response.data.decode()
 
     def test_past_competition_should_not_be_bookable(self, test_club, test_past_comp, client):
         """
@@ -27,6 +28,7 @@ class TestShowSummary:
         """
         response = client.post('/showSummary', data={'email': test_club['email']})
         assert response.status_code == 200
-        assert test_past_comp['name'] in response.data.decode() and "Past competition" in response.data.decode()
+        assert "Past competition" in response.data.decode()
+        assert test_past_comp['name'] in response.data.decode()
 
 

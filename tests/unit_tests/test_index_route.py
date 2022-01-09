@@ -7,4 +7,4 @@ def test_index_route_should_return_index_page(client):
     """
     response = client.get('/')
     assert response.status_code == 200
-    assert "GUDLFT Registration" in response.data.decode()
+    assert "Registration Portal" in response.data.decode()
