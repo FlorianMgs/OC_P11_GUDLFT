@@ -1,5 +1,6 @@
 import pytest
 from server import create_app
+from helpers import read
 
 
 @pytest.fixture
@@ -11,26 +12,14 @@ def client():
 
 @pytest.fixture
 def test_club():
-    return {
-        "name": "Simply Lift",
-        "email": "john@simplylift.co",
-        "points": "40"
-    }
+    return read('clubs.json', 'clubs')[0]
 
 
 @pytest.fixture
 def test_comp():
-    return {
-        "name": "Summer Festival 2022",
-        "date": "2022-06-22 13:30:00",
-        "numberOfPlaces": "58"
-    }
+    return read('competitions.json', 'competitions')[2]
 
 
 @pytest.fixture
 def test_past_comp():
-    return {
-        "name": "Fall Classic",
-        "date": "2020-10-22 13:30:00",
-        "numberOfPlaces": "13"
-    }
+    return read('competitions.json', 'competitions')[0]
