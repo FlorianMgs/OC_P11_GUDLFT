@@ -18,8 +18,11 @@ def create_app(config):
     def show_summary():
         try:
             club = [club for club in clubs if club['email'] == request.form['email']][0]
+
+            # Checking if competition is past or not, then render template
             _competitions = update_competition_dict_with_past_bool(competitions)
             return render_template('welcome.html', club=club, competitions=_competitions)
+
         except IndexError:
             flash("error: please enter a valid email")
             return redirect(url_for('index'))
