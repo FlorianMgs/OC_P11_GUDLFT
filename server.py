@@ -1,14 +1,16 @@
 from utils import read, update_points, update_competition_dict_with_past_bool
 from flask import Flask, render_template, request, redirect, flash, url_for
 
+COMPETITIONS = read('competitions.json', 'competitions')
+CLUBS = read('clubs.json', 'clubs')
+
 
 def create_app(config):
     app = Flask(__name__)
     app.secret_key = 'something_special'
     app.config.from_object(config)
-
-    competitions = read('competitions.json', 'competitions')
-    clubs = read('clubs.json', 'clubs')
+    competitions = COMPETITIONS
+    clubs = CLUBS
 
     @app.route('/')
     def index():
