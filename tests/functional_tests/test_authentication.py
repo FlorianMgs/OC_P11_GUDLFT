@@ -3,7 +3,6 @@ import server
 from server import create_app
 from flask import url_for
 import pytest
-import socket
 import subprocess
 import os
 import time
@@ -23,25 +22,16 @@ def chrome_options(chrome_options):
     chrome_options.add_argument('--disable-dev-shm-usage')
     chrome_options.add_argument("--disable-extensions")
     chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--remote-debugging-port=5000")
     chrome_options.binary_location = 'tests/functional_tests/chromedriver.exe'
     return chrome_options
 
 
-@pytest.fixture(scope="session")
-def flask_port():
-    # Ask OS for a free port.
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind(("", 0))
-        addr = s.getsockname()
-        port = addr[1]
-        return port
-
-
 @pytest.fixture(scope="session", autouse=True)
-def live_server(flask_port):
+def live_server():
     env = os.environ.copy()
     env["FLASK_APP"] = "main"
-    server = subprocess.Popen(['flask', 'run', '--port', str(flask_port)], env=env)
+    server = subprocess.Popen(['flask', 'run', '--port', "5000"], env=env)
     try:
         yield server
     finally:
