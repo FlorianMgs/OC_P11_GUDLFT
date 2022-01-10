@@ -1,10 +1,10 @@
-from tests.unit_tests.server.fixtures import client, test_club, test_past_comp
+from tests.unit_tests.server.fixtures import client, test_club, test_comp
 
 
 class TestShowSummary:
 
     club = test_club()[0]
-    past_comp = test_past_comp()[0]
+    past_comp = test_comp()[0]
 
     def test_valid_email_should_return_welcome_page(self, client):
         """
