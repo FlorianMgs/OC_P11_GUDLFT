@@ -11,7 +11,7 @@ def test_purchase_places(client):
     # login
     response = client.post('/showSummary', data={'email': club['email']}, follow_redirects=True)
     assert response.status_code == 200
-    assert 'Welcome, ' + club['email'] in response.data.decode()
+    assert f"Welcome, {club['email']}" in response.data.decode()
 
     # purchasing
     response = client.post(
