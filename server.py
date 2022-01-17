@@ -1,4 +1,4 @@
-from utils import read, update_points, update_competition_dict_with_past_bool
+from utils import read, update_points, update_competition_dict_with_past_bool, check_points
 from flask import Flask, render_template, request, redirect, flash, url_for
 
 COMPETITIONS = read('competitions.json', 'competitions')
@@ -34,7 +34,11 @@ def create_app(config):
         try:
             foundClub = [c for c in clubs if c['name'] == club][0]
             foundCompetition = [c for c in competitions if c['name'] == competition][0]
-            return render_template('booking.html', club=foundClub, competition=foundCompetition)
+
+            max_places = round(int(foundClub['points']) / 3)
+            if max_places > 12:
+                max_places = 12
+            return render_template('booking.html', club=foundClub, competition=foundCompetition, max_places=max_places)
 
         except IndexError:
             flash("error: Something went wrong-please try again")
@@ -63,21 +67,25 @@ def create_app(config):
 
         else:
             # checking if points are valid
-            if not 0 < placesRequired <= 12 or placesRequired > int(club['points']) or placesRequired > int(competition['numberOfPlaces']):
-                flash("error: please enter a valid amount of points")
+            if not check_points(placesRequired, competition, club):
+                flash("error: point amount is not valid or you already have reserved 12 places.")
                 return redirect(url_for('book', club=club['name'], competition=competition['name']))
 
             else:
                 # updating number of places available in competition, then deduct points from club balance
+                # then update club reservations count
                 competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
-                club['points'] = int(club['points']) - placesRequired
+                club['points'] = int(club['points']) - (placesRequired * 3)
+                club['reservations'][competition['name']] = int(club['reservations'][competition['name']]) + placesRequired
 
                 # updating points in clubs.json and competitions.json
                 update_points(
                     points=str(club['points']),
                     places=str(competition['numberOfPlaces']),
+                    resas=str(club['reservations'][competition['name']]),
                     club_idx=clubs.index(club),
-                    comp_idx=competitions.index(competition)
+                    comp_idx=competitions.index(competition),
+                    comp_name=competition['name']
                 )
 
                 flash('Great-booking complete!')
