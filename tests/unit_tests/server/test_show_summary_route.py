@@ -1,4 +1,4 @@
-from tests.unit_tests.server.fixtures import client, test_club, test_comp
+from tests.unit_tests.server.fixtures import client, test_club, test_comp, app, captured_templates
 
 
 class TestShowSummary:
@@ -6,23 +6,28 @@ class TestShowSummary:
     club = test_club()[0]
     past_comp = test_comp()[0]
 
-    def test_valid_email_should_return_welcome_page(self, client):
+    def test_valid_email_should_return_welcome_page(self, client, captured_templates):
         """
         As we dont have means to assert used templates, we check if our posted email is in response
         """
         valid_email = self.club["email"]
         response = client.post('/showSummary', data={'email': valid_email})
         assert response.status_code == 200
+        assert len(captured_templates) == 1
+        template, context = captured_templates[0]
+        assert template.name == "welcome.html"
         assert valid_email in response.data.decode()
 
-    def test_invalid_email_should_return_index_page_with_error(self, client):
+    def test_invalid_email_should_return_index_page_with_error(self, client, captured_templates):
         """
         As we dont have means to assert used templates, we check if the error message is in response
         """
         invalid_email = 'invalid@simplylift.com'
         response = client.post('/showSummary', data={'email': invalid_email}, follow_redirects=True)
         assert response.status_code == 200
-        assert "GUDLFT Registration" in response.data.decode()
+        assert len(captured_templates) == 1
+        template, context = captured_templates[0]
+        assert template.name == "index.html"
         assert 'error' in response.data.decode()
 
     def test_past_competition_should_not_be_bookable(self, client):

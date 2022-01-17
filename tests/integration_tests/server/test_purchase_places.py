@@ -1,4 +1,4 @@
-from tests.unit_tests.server.fixtures import client, test_club, test_comp
+from tests.unit_tests.server.fixtures import client, test_club, test_comp, app
 
 
 def test_purchase_places(client):

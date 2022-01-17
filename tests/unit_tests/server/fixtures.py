@@ -1,5 +1,6 @@
 import pytest
 import server
+from flask import template_rendered
 from server import create_app
 
 
@@ -8,17 +9,32 @@ def test_club():
         {
             "name": "Simply Lift",
             "email": "john@simplylift.co",
-            "points": "40"
+            "points": "30",
+            "reservations": {
+                "Spring Festival": "0",
+                "Fall Classic": "0",
+                "Summer Festival 2022": "0"
+            }
         },
         {
             "name": "Iron Temple",
             "email": "admin@irontemple.com",
-            "points": "4"
+            "points": "4",
+            "reservations": {
+                "Spring Festival": "0",
+                "Fall Classic": "0",
+                "Summer Festival 2022": "0"
+            }
         },
         {
             "name": "She Lifts",
             "email": "kate@shelifts.co.uk",
-            "points": "12"
+            "points": "12",
+            "reservations": {
+                "Spring Festival": "0",
+                "Fall Classic": "0",
+                "Summer Festival 2022": "0"
+            }
         }
     ]
 
@@ -44,11 +60,27 @@ def test_comp():
 
 
 @pytest.fixture
-def client(mocker):
+def app(mocker):
     mocker.patch.object(server, "COMPETITIONS", test_comp())
     mocker.patch.object(server, "CLUBS", test_club())
-    app = create_app({"TESTING": True})
+    return create_app({"TESTING": True})
+
+
+@pytest.fixture
+def client(app):
     with app.test_client() as client:
         yield client
 
 
+@pytest.fixture
+def captured_templates(app):
+    recorded = []
+
+    def record(sender, template, context, **extra):
+        recorded.append((template, context))
+
+    template_rendered.connect(record, app)
+    try:
+        yield recorded
+    finally:
+        template_rendered.disconnect(record, app)

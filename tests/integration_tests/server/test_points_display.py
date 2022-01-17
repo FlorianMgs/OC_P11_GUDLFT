@@ -1,4 +1,4 @@
-from tests.unit_tests.server.fixtures import client, test_club
+from tests.unit_tests.server.fixtures import client, test_club, app
 
 
 def test_points_display_without_login(client):

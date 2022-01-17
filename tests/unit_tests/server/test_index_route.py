@@ -1,10 +1,12 @@
-from tests.unit_tests.server.fixtures import client
+from tests.unit_tests.server.fixtures import client, app, captured_templates
 
 
-def test_index_route_should_return_index_page(client):
+def test_index_route_should_return_index_page(client, captured_templates):
     """
     GET request to '/' should return index page.
     """
     response = client.get('/')
     assert response.status_code == 200
-    assert "Registration Portal" in response.data.decode()
+    assert len(captured_templates) == 1
+    template, context = captured_templates[0]
+    assert template.name == "index.html"

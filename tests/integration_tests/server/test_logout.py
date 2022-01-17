@@ -1,7 +1,7 @@
-from tests.unit_tests.server.fixtures import client, test_club
+from tests.unit_tests.server.fixtures import client, test_club, app, captured_templates
 
 
-def test_logout(client):
+def test_logout(client, captured_templates):
     """
     We first login, then logout and assert that we are on index page
     """
@@ -10,4 +10,6 @@ def test_logout(client):
     assert response.status_code == 200
     response = client.get('/logout', follow_redirects=True)
     assert response.status_code == 200
-    assert "GUDLFT Registration" in response.data.decode()
+    template, context = captured_templates[1]
+    assert template.name == "index.html"
+

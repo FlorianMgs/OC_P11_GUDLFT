@@ -17,14 +17,14 @@ def app(session_mocker):
 
 
 @pytest.fixture
-def chrome_options(chrome_options):
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--disable-dev-shm-usage')
-    chrome_options.add_argument("--disable-extensions")
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--remote-debugging-port=5000")
-    chrome_options.binary_location = 'tests/functional_tests/chromedriver.exe'
-    return chrome_options
+def firefox_options(firefox_options):
+    firefox_options.add_argument('--no-sandbox')
+    firefox_options.add_argument('--disable-dev-shm-usage')
+    firefox_options.add_argument("--disable-extensions")
+    firefox_options.add_argument("--disable-gpu")
+    firefox_options.add_argument("--remote-debugging-port=5000")
+    firefox_options.binary_location = 'tests/functional_tests/geckodriver.exe'
+    return firefox_options
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -40,7 +40,7 @@ def live_server():
 
 class TestAuthentication:
 
-    def test_auth(self, live_server, chrome_options, selenium):
+    def test_auth(self, live_server, firefox_options, selenium):
         selenium.get(url_for('index'))
         time.sleep(50)
 
